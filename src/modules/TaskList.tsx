@@ -1,23 +1,33 @@
-import { useDispatch, useSelector } from "react-redux";
-import { Empty } from "src/components/Empty";
-import { List } from "src/components/List";
-import { deleteTask, tasksSelector, toggleTask } from "src/store/taskSlice";
+import { useDispatch, useSelector } from 'react-redux'
+import { Empty } from 'src/components/Empty'
+import { List } from 'src/components/List'
+import { deleteTask, tasksSelector, toggleTask } from 'src/store/taskSlice'
 
-export const TaskList = () => {
-  const items = useSelector(tasksSelector);
-  const dispatch = useDispatch();
+interface IProps {
+	filter: boolean
+}
 
-  const handleDelete = (id: Task["id"]) => {
-    dispatch(deleteTask(id));
-  };
+export const TaskList = ({ filter }: IProps) => {
+	const items = useSelector(tasksSelector)
+	const dispatch = useDispatch()
 
-  const handleToggle = (id: Task["id"]) => {
-    dispatch(toggleTask(id));
-  };
+	const handleDelete = (id: Task['id']) => {
+		dispatch(deleteTask(id))
+	}
 
-  return items.length > 0 ? (
-    <List items={items} onDelete={handleDelete} onToggle={handleToggle} />
-  ) : (
-    <Empty />
-  );
-};
+	const handleToggle = (id: Task['id']) => {
+		dispatch(toggleTask(id))
+	}
+
+	const filteredItems = filter ? items.filter((item) => !item.done) : items
+
+	return filteredItems.length > 0 ? (
+		<List
+			items={filteredItems}
+			onDelete={handleDelete}
+			onToggle={handleToggle}
+		/>
+	) : (
+		<Empty />
+	)
+}
